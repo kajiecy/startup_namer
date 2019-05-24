@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       theme: new ThemeData(
-        primaryColor: Colors.deepOrangeAccent,
+        primaryColor: Colors.cyan,
       ),
     );
   }
