@@ -1,125 +1,65 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    final wordPair = new WordPair.random();
-    return new MaterialApp(
-      title: 'Welcome to Flutter',
-      home: new Scaffold(
-        appBar: new AppBar(title: new Text('Welcome to Flutter'),),
-        body: new Center(
-//          child: new Text('Hello World'),
-          child: new RandomWords(),
+    // TODO: implement build
+    return MaterialApp(
+      title: 'first hello',
+      theme: ThemeData(
+          primarySwatch:Colors.cyan,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('first App bar'),
         ),
-      ),
-      theme: new ThemeData(
-        primaryColor: Colors.deepOrangeAccent,
-      ),
-    );
-  }
-}
+        body:Padding(
+          padding: const EdgeInsets.only(left: 0),
+          child: Text(
+              'Hello Word2!你好，世界Hello Word2!你好，世界Hello Word2!你好，世界Hello Word2!你好，世界',
+              style:TextStyle(
+                color: Color(0xFF0000FF),
+                fontSize: 28.0,
+                textBaseline:TextBaseline.alphabetic,
+//                  backgroundColor:Color(0x592547FF),
+                fontStyle:FontStyle.italic,
+                letterSpacing:2.0,//字母之间的间距
+                wordSpacing:2.0,//字母之间的间距
+//                  height:0, //文本的高度?
+//                  foreground:new Paint()..color = Color(0xFBBB4D00),//前景 和 color 互斥
+                background:new Paint()..color = Color(0x592547FF),//背景
+                shadows:[
+//                      new Shadow(color: Colors.red,blurRadius: 8,offset: Offset(0, 0)),
+                  new Shadow(color: Colors.cyan,blurRadius: 8,offset: Offset(0, 2)),
+//                      new Shadow(color: Colors.green,blurRadius: 8,offset: Offset(0, 0))
+                ],//给文字添加阴影
+                decoration:TextDecoration.combine([
+                  TextDecoration.underline,
+                  TextDecoration.lineThrough,
+                  TextDecoration.overline,
+                  TextDecoration.overline,
+                ]), // 设置下划线
+                decorationColor:Colors.orange,// 下划线颜色
+                decorationStyle:TextDecorationStyle.double,// 下划线样式
+                fontFamily:'宋体',// 字体
+              ), // 文本样式
+              key:Key('111'), // key
+              strutStyle:StrutStyle(
+                  fontSize: 10,
+                  height:5
+              ), // 设置每行的最小行高
+              textAlign:TextAlign.center,
+              textDirection:TextDirection.rtl,
+              softWrap:true,
+              overflow:TextOverflow.fade, //文本的截断方式
+              textScaleFactor:1, // 缩放，
+              maxLines:2 // 最多显示行数
 
-// Stateful widgets 持有的状态可能在widget生命周期中发生变化. 实现一个 stateful widget 至少需要两个类:
-//一个 StatefulWidget类。
-//一个 State类。 StatefulWidget类本身是不变的，但是 State类在widget生命周期中始终存在.
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => new RandomWordsState();
-}
-class RandomWordsState extends State<RandomWords> {
-  //在Dart语言中使用下划线前缀标识符，会强制其变成私有的。
-  final _suggestions = <WordPair>[];
-  final _saved = new Set<WordPair>();
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-  @override
-  Widget build(BuildContext context) {
-//    final wordPair = new WordPair.random();
-//    return new Text(wordPair.asPascalCase);
-    return new Scaffold (
-      appBar: new AppBar(
-        title: new Text('Startup Name Generator'),
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved),
-        ],
-      ),
-      body: _buildSuggestions(),
-    );
-  }
-
-  Widget _buildSuggestions() {
-    return new ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        // 对于每个建议的单词对都会调用一次itemBuilder，然后将单词对添加到ListTile行中
-        // 在偶数行，该函数会为单词对添加一个ListTile row.
-        // 在奇数行，该函数会添加一个分割线widget，来分隔相邻的词对。
-        // 注意，在小屏幕上，分割线看起来可能比较吃力。
-        itemBuilder: (context, i) {
-          // 在每一列之前，添加一个1像素高的分隔线widget
-          if (i.isOdd) return new Divider();
-          // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
-          // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
-          final index = i ~/ 2;
-          // 如果是建议列表中最后一个单词对
-          if (index >= _suggestions.length) {
-            // ...接着再生成10个单词对，然后添加到建议列表
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index],index);
-        }
-    );
-  }
-
-  Widget _buildRow(WordPair pair,int index) {
-    final alreadySaved = _saved.contains(pair);
-    return new ListTile(
-      title: new Text(
-        pair.asPascalCase+'-'+index.toString(),
-        style: _biggerFont,
-      ),
-      trailing: new Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
-    );
-  }
-  void _pushSaved() {
-    Navigator.of(context).push(
-      new MaterialPageRoute(
-        builder: (context) {
-          final tiles = _saved.map((pair) {
-              return new ListTile(
-                title: new Text(
-                  pair.asPascalCase,
-                  style: _biggerFont,
-                ),
-              );
-            },
-          );
-          final divided = ListTile.divideTiles(
-            context: context,
-            tiles: tiles,
-          ).toList();
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text('Saved Suggestions'),
-            ),
-            body: new ListView(children: divided),
-          );
-        },
+          ),
+        )
       ),
     );
   }
