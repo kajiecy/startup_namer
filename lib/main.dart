@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(StackWidget());
+void main() => runApp(MediaQueryFeatureWidget());
 
-class StackWidget extends StatelessWidget {
+GlobalKey _globalKey = GlobalKey();
+
+class MediaQueryFeatureWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,24 +13,37 @@ class StackWidget extends StatelessWidget {
         primaryColor: Colors.blue,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text("Flutter布局Widget -- 层叠布局")),
-        body: Stack(
-          overflow: Overflow.visible,
-          fit: StackFit.expand,
-          children: <Widget>[
-            Positioned(
-              left: 10,
-              top: 10,
-              child: Image.asset(
-                "assets/images/cat1.jpg",
-                width: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Text('Hello Flutter'),
-          ],
+          appBar: AppBar(title: Text("Flutter 功能类Widget -- MediaQuery")),
+          body: BodyWidget()),
+    );
+  }
+}
+
+class BodyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Hello Flutter",
+          key: _globalKey,
         ),
-      ),
+        RaisedButton(
+          child: Text('getSize'),
+          onPressed: () {
+            //获取屏幕的宽高
+            print("Screen width:" +
+                MediaQuery.of(context).size.width.toString() +
+                " Screen height:" +
+                MediaQuery.of(context).size.height.toString());
+            //获取子Widget 的宽高
+            print("Ttext width:" +
+                _globalKey.currentContext.size.width.toString() +
+                " Screen height:" +
+                _globalKey.currentContext.size.height.toString());
+          },
+        )
+      ],
     );
   }
 }
